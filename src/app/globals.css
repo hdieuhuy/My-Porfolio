@@ -153,3 +153,7 @@ html.focus-experience,html.focus-experience body{height:100%;overflow:hidden;ove
 @media(max-height:710px) and (max-width:760px){.certificate-thumbnail{aspect-ratio:1.35}.certificate-copy h3{font-size:7px}.certificate-copy>span{font-size:4.5px}.trading-voice{font-size:13px;margin-bottom:10px}.focus-scene .principle p{font-size:9px;line-height:1.65}.focus-scene .trading-layout{gap:13px}.focus-scene .trading h2{font-size:25px}.focus-scene .principle>button{font-size:11px}}
 .focus-experience .nav-links button{display:inline-flex;align-items:center;justify-content:center;gap:8px}.nav-links button>svg{color:#7188a6;transition:color .2s,transform .25s}.nav-links button:hover>svg,.nav-links button.current>svg{color:var(--accent)}.nav-links button:hover>svg{transform:translateY(-1px)}
 @media(max-width:760px){.focus-experience .nav-links.expanded{gap:12px}.focus-experience .nav-links button{gap:6px;font-size:10px}.nav-links button>svg{width:13px;height:13px}}
+.focus-scene .real-projects{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;max-width:none}
+.focus-scene .real-projects .project-preview{max-height:230px}
+@media(max-width:760px){.focus-scene .real-projects{display:block}.focus-scene .real-projects .project-preview{max-height:220px}}
+@media(max-height:710px) and (max-width:760px){.focus-scene .real-projects .project-preview{max-height:165px}}

@@ -5,7 +5,7 @@ export default function HeroAvatar({mode}:{mode:'dev'|'trader'}){
  const host=useRef<HTMLDivElement>(null);
  function move(event:React.PointerEvent<HTMLDivElement>){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const rect=event.currentTarget.getBoundingClientRect();host.current?.style.setProperty('--portrait-x',`${((event.clientX-rect.left)/rect.width-.5)*12}deg`);host.current?.style.setProperty('--portrait-y',`${-((event.clientY-rect.top)/rect.height-.5)*9}deg`)}
  function reset(){host.current?.style.setProperty('--portrait-x','0deg');host.current?.style.setProperty('--portrait-y','0deg')}
- return <div ref={host} className={'portrait-stage '+mode} onPointerMove={move} onPointerLeave={reset}><div className="portrait-aura"/><RoleBackdrop mode={mode}/><div className="portrait-person"><Image src="/images/huy-avatar-toy-3d.png" alt="Huy — rounded 3D cartoon avatar in a blue hoodie" fill priority sizes="(max-width: 760px) 85vw, 45vw"/></div><span className="portrait-tag">{mode==='dev'?'< BUILDER / >':'↗ MARKET MINDSET'}</span></div>
+ return <div ref={host} className={'portrait-stage '+mode} onPointerMove={move} onPointerLeave={reset}><div className="portrait-aura"/><RoleBackdrop mode={mode}/><div className="portrait-person"><Image src="/images/huy-avatar-black-shirt-3d.png" alt="Huy — rounded 3D cartoon avatar wearing round glasses and a black button-up shirt" fill priority sizes="(max-width: 760px) 85vw, 45vw"/></div><span className="portrait-tag">{mode==='dev'?'< BUILDER / >':'↗ MARKET MINDSET'}</span></div>
 }
 
 function RoleBackdrop({mode}:{mode:'dev'|'trader'}){

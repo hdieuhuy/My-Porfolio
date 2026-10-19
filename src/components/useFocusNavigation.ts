@@ -58,7 +58,7 @@ export function useFocusNavigation(blocked: boolean) {
    if(event.key==='Home'||event.key==='End'){event.preventDefault();go(event.key==='Home'?0:scenes.length-1)}
   };
   const start=(event:TouchEvent)=>{startX=event.touches[0].clientX;startY=event.touches[0].clientY};
-  const end=(event:TouchEvent)=>{if(blocked||interactive(event.target)||performance.now()<lockedUntil.current)return;const dx=event.changedTouches[0].clientX-startX,dy=event.changedTouches[0].clientY-startY;if(Math.abs(dy)>65&&Math.abs(dy)>Math.abs(dx)*1.2)go(current.current+(dy<0?1:-1))};
+  const end=(event:TouchEvent)=>{if(blocked||interactive(event.target)||(event.target instanceof Element&&event.target.closest('[data-scene-gesture]'))||performance.now()<lockedUntil.current)return;const dx=event.changedTouches[0].clientX-startX,dy=event.changedTouches[0].clientY-startY;if(Math.abs(dy)>65&&Math.abs(dy)>Math.abs(dx)*1.2)go(current.current+(dy<0?1:-1))};
   addEventListener('wheel',wheel,{passive:false});addEventListener('keydown',key);addEventListener('touchstart',start,{passive:true});addEventListener('touchend',end,{passive:true});
   return()=>{document.documentElement.classList.remove('focus-experience');removeEventListener('wheel',wheel);removeEventListener('keydown',key);removeEventListener('touchstart',start);removeEventListener('touchend',end)};
  },[blocked,go]);
