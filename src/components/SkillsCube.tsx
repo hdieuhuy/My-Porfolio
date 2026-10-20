@@ -1,22 +1,23 @@
 'use client';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { Code2, Atom, Layers3, ChartNoAxesCombined, ScanLine, Clock3, Pause, Play, Move } from 'lucide-react';
+import { Code2, Atom, Layers3, ChartNoAxesCombined, ScanLine, ShieldCheck, Pause, Play, Move } from 'lucide-react';
 const skills=[
  {name:'Next.js',category:'DEVELOPMENT',detail:'App Router · React',description:'Building responsive web applications with Next.js and React.',icon:Code2,position:'front',x:-12,y:-20,normal:[0,0,1]},
  {name:'React.js',category:'DEVELOPMENT',detail:'Components · State',description:'Turning interface ideas into reusable components and interactive experiences.',icon:Atom,position:'right',x:-12,y:-110,normal:[1,0,0]},
  {name:'UI & Motion',category:'DEVELOPMENT',detail:'TypeScript · Tailwind · Motion',description:'Bringing structure, visual detail and purposeful motion to the frontend.',icon:Layers3,position:'back',x:-12,y:-200,normal:[0,0,-1]},
  {name:'Markets',category:'TRADING',detail:'NQ · ES · YM',description:'A focused watchlist: NQ, ES and YM futures.',icon:ChartNoAxesCombined,position:'left',x:-12,y:-290,normal:[-1,0,0]},
  {name:'QT × ICT',category:'TRADING',detail:'Quarter Theory × ICT',description:'A framework for reading market context and shaping a deliberate trading idea.',icon:ScanLine,position:'top',x:-78,y:-20,normal:[0,-1,0]},
- {name:'NYAM',category:'TRADING',detail:'New York Morning',description:'One session, full attention: the New York morning.',icon:Clock3,position:'bottom',x:78,y:-20,normal:[0,1,0]}
+ {name:'Risk',category:'TRADING',detail:'Risk Management · Discipline',description:'Define the risk before the entry. Position sizing, clear invalidation and disciplined execution shape every trading decision.',icon:ShieldCheck,position:'bottom',x:78,y:-20,normal:[0,1,0]}
 ];
 function nearestAngle(target:number,current:number){return target+Math.round((current-target)/360)*360}
-export default function SkillsCube(){
+export default function SkillsCube({onActiveChange}:{onActiveChange?:(index:number)=>void}){
  const [active,setActive]=useState(0);
+ useEffect(()=>{onActiveChange?.(active)},[active,onActiveChange]);
  const [dragging,setDragging]=useState(false);const [hovered,setHovered]=useState(false);const [focused,setFocused]=useState(false);const [stopped,setStopped]=useState(false);const [reduced,setReduced]=useState(false);const [hidden,setHidden]=useState(false);
  const cube=useRef<HTMLDivElement>(null);const angles=useRef({x:-12,y:-20});const velocity=useRef({x:0,y:0});const target=useRef<{x:number;y:number}|null>(null);const activeRef=useRef(0);
  const drag=useRef<{id:number;x:number;y:number;time:number}|null>(null);
- function paint(){cube.current?.style.setProperty('--cube-x',`${angles.current.x}deg`);cube.current?.style.setProperty('--cube-y',`${angles.current.y}deg`);const {x,y}=angles.current;const rx=x*Math.PI/180,ry=y*Math.PI/180;let best=0,score=-Infinity;skills.forEach((skill,i)=>{const [nx,ny,nz]=skill.normal;const facing=Math.sin(rx)*ny+Math.cos(rx)*(-Math.sin(ry)*nx+Math.cos(ry)*nz);if(facing>score){score=facing;best=i}});if(best!==activeRef.current){activeRef.current=best;setActive(best)}}
- function select(index:number){setStopped(true);velocity.current={x:0,y:0};target.current={x:nearestAngle(skills[index].x,angles.current.x),y:nearestAngle(skills[index].y,angles.current.y)};if(reduced){angles.current=target.current;target.current=null;paint()}}
+ function paint(){cube.current?.style.setProperty('--cube-x',`${angles.current.x}deg`);cube.current?.style.setProperty('--cube-y',`${angles.current.y}deg`);const {x,y}=angles.current;const rx=x*Math.PI/180,ry=y*Math.PI/180;let best=0,score=-Infinity;skills.forEach((skill,i)=>{const [nx,ny,nz]=skill.normal;const facing=Math.sin(rx)*ny+Math.cos(rx)*(-Math.sin(ry)*nx+Math.cos(ry)*nz);if(facing>score){score=facing;best=i}});if(!target.current&&best!==activeRef.current){activeRef.current=best;setActive(best)}}
+ function select(index:number){activeRef.current=index;setActive(index);setStopped(true);velocity.current={x:0,y:0};target.current={x:nearestAngle(skills[index].x,angles.current.x),y:nearestAngle(skills[index].y,angles.current.y)};if(reduced){angles.current=target.current;target.current=null;paint()}}
  useEffect(()=>{const media=matchMedia('(prefers-reduced-motion: reduce)');const preference=()=>setReduced(media.matches);const visibility=()=>setHidden(document.hidden);preference();visibility();media.addEventListener('change',preference);document.addEventListener('visibilitychange',visibility);return()=>{media.removeEventListener('change',preference);document.removeEventListener('visibilitychange',visibility)}},[]);
  const paused=hovered||focused||stopped||dragging||reduced||hidden;
  useEffect(()=>{let frame=0,last=0;function tick(now:number){const dt=last?Math.min((now-last)/1000,.04):0;last=now;if(!drag.current&&!hidden&&!reduced){if(target.current){const blend=1-Math.exp(-9*dt);angles.current.x+=(target.current.x-angles.current.x)*blend;angles.current.y+=(target.current.y-angles.current.y)*blend;if(Math.abs(target.current.x-angles.current.x)+Math.abs(target.current.y-angles.current.y)<.05){angles.current=target.current;target.current=null}}else if(Math.abs(velocity.current.x)+Math.abs(velocity.current.y)>.2){angles.current.x+=velocity.current.x*dt;angles.current.y+=velocity.current.y*dt;const decay=Math.exp(-4*dt);velocity.current.x*=decay;velocity.current.y*=decay}else if(!paused){angles.current.x+=6*dt;angles.current.y-=14*dt}paint()}frame=requestAnimationFrame(tick)}frame=requestAnimationFrame(tick);return()=>cancelAnimationFrame(frame)},[paused,hidden,reduced]);
