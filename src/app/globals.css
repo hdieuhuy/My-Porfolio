@@ -157,3 +157,6 @@ html.focus-experience,html.focus-experience body{height:100%;overflow:hidden;ove
 .focus-scene .real-projects .project-preview{max-height:230px}
 @media(max-width:760px){.focus-scene .real-projects{display:block}.focus-scene .real-projects .project-preview{max-height:220px}}
 @media(max-height:710px) and (max-width:760px){.focus-scene .real-projects .project-preview{max-height:165px}}
+
+/* Keep four case studies in the single-screen work section. */
+@media(min-width:761px){.focus-scene .real-projects{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.focus-scene .real-projects .tags{gap:4px}.focus-scene .real-projects .tags>span{font-size:6px;padding:4px 5px}.focus-scene .real-projects .project-info>.eyebrow{font-size:6px;letter-spacing:.6px}}
